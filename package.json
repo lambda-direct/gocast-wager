@@ -1,0 +1,11 @@
+{
+  "name": "gocast-wager",
+  "description": "",
+  "version": "1.0.0",
+  "dependencies": {},
+  "scripts": {
+    "build": "make",
+    "deploy": "npm run build && sls deploy --verbose"
+  },
+  "devDependencies": {}
+}

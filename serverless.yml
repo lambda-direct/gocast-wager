@@ -1,0 +1,40 @@
+service: gocast-wager
+
+frameworkVersion: '2'
+
+useDotenv: true
+
+provider:
+  name: aws
+  region: ${opt:region, 'eu-central-1'}
+  stage: ${opt:stage, 'dev'}
+  runtime: go1.x
+  lambdaHashingVersion: 20201221
+  versionFunctions: false
+
+package:
+  patterns:
+    - '!./**'
+    - ./bin/**
+
+functions:
+  testluck:
+    handler: bin/testluck
+    events:
+      - http: POST /api/testluck
+    environment:
+      API_HOST:
+        Fn::Sub:
+          - 'https://${ApiID}.execute-api.${self:provider.region}.amazonaws.com/${self:provider.stage}'
+          - ApiID:
+              Ref: ApiGatewayRestApi
+      DB_USER: ${env:DB_USER}
+      DB_PWD: ${env:DB_PWD}
+      DB_HOST: ${env:DB_HOST}
+      DB_PORT: ${env:DB_PORT}
+      DB_NAME: ${env:DB_NAME}
+
+  flipcoin:
+    handler: bin/flipcoin
+    events:
+      - http: GET /api/flipcoin
